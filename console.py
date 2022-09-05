@@ -14,8 +14,14 @@ class HBNBCommand(cmd.Cmd):
 
     prompt = "(hbnb) "
 
-    def precmd(self, line):
+    def default(self, line):
+        """Catch commands if nothing else matches then."""
+        # print("DEF:::", line)
+        self._precmd(line)
+
+    def _precmd(self, line):
         """Intercepts commands to test for class.syntax()"""
+        # print("PRECMD:::", line)
         match = re.search(r"^(\w*)\.(\w+)(?:\(([^)]*)\))$", line)
         if not match:
             return line
@@ -43,7 +49,7 @@ class HBNBCommand(cmd.Cmd):
                     1) or "") + " " + (match_attr_and_value.group(2) or "")
         command = method + " " + classname + " " + uid + " " + attr_and_value
         self.onecmd(command)
-        return ""
+        return command
 
     def update_dict(self, classname, uid, s_dict):
         """Helper method for update() with a dictionary."""
@@ -68,7 +74,8 @@ class HBNBCommand(cmd.Cmd):
                 storage.all()[key].save()
 
     def do_EOF(self, line):
-        """Handles End Of File character."""
+        """Handles End Of File character.
+        """
         print()
         return True
 
@@ -95,8 +102,7 @@ class HBNBCommand(cmd.Cmd):
             print(b.id)
 
     def do_show(self, line):
-        """Prints the string representation of an instance\
-        based on the class name and id.
+        """Prints the string representation of an instance.
         """
         if line == "" or line is None:
             print("** class name missing **")
@@ -133,8 +139,7 @@ class HBNBCommand(cmd.Cmd):
                     storage.save()
 
     def do_all(self, line):
-        """Prints all string representation of\
-        all instances based or not on the class name.
+        """Prints all string representation of all instances.
         """
         if line != "":
             words = line.split(' ')
@@ -163,8 +168,7 @@ class HBNBCommand(cmd.Cmd):
             print(len(matches))
 
     def do_update(self, line):
-        """Updates an instance based on the class\
-        name and id by adding or updating attribute.
+        """Updates an instance by adding or updating attribute.
         """
         if line == "" or line is None:
             print("** class name missing **")
